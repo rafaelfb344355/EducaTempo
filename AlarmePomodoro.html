@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurar Alarme Pomodoro</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Link para o CSS do Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container ">
+    <img class="mb-4 " src="./Design sem nome/2.png" alt="">
+    <form id="pomodoroForm">
+        <div class="form-group">
+            <label for="totalDuration">Duração Total (horas)</label>
+            <input type="number" class="form-control" id="totalDuration" name="totalDuration" value="2" min="1">
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" id="option1" name="pomodoroOption" class="custom-control-input" value="option1" checked>
+                <label class="custom-control-label" for="option1">Opção 1</label>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Estudo</span>
+                </div>
+                <input type="number" class="form-control" id="study1" name="study1" value="25" min="1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">min</span>
+                </div>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Descanso</span>
+                </div>
+                <input type="number" class="form-control" id="break1" name="break1" value="5" min="1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">min</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" id="option2" name="pomodoroOption" class="custom-control-input" value="option2">
+                <label class="custom-control-label" for="option2">Opção 2</label>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Estudo</span>
+                </div>
+                <input type="number" class="form-control" id="study2" name="study2" value="50" min="1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">min</span>
+                </div>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Descanso</span>
+                </div>
+                <input type="number" class="form-control" id="break2" name="break2" value="10" min="1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">min</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" id="option3" name="pomodoroOption" class="custom-control-input" value="option3">
+                <label class="custom-control-label" for="option3">Opção 3</label>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Estudo</span>
+                </div>
+                <input type="number" class="form-control" id="study3" name="study3" value="90" min="1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">min</span>
+                </div>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Descanso</span>
+                </div>
+                <input type="number" class="form-control" id="break3" name="break3" value="20" min="1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">min</span>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="configurePomodoro()">Salvar</button>
+    </form>
+</div>
+
+<!-- Scripts do Bootstrap e jQuery (opcionais) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+function configurePomodoro() {
+    const totalDuration = document.getElementById('totalDuration').value;
+    const selectedOption = document.querySelector('input[name="pomodoroOption"]:checked').value;
+
+    let studyTime, breakTime;
+
+    // Determinar quais inputs de tempo de estudo e descanso capturar com base na opção selecionada
+    switch (selectedOption) {
+        case 'option1':
+            studyTime = document.getElementById('study1').value;
+            breakTime = document.getElementById('break1').value;
+            break;
+        case 'option2':
+            studyTime = document.getElementById('study2').value;
+            breakTime = document.getElementById('break2').value;
+            break;
+        case 'option3':
+            studyTime = document.getElementById('study3').value;
+            breakTime = document.getElementById('break3').value;
+            break;
+        default:
+            // Tratamento para caso não seja selecionada nenhuma opção (embora o HTML limita a uma escolha)
+            alert('Por favor, selecione uma opção válida.');
+            return;
+    }
+
+    // Montar objeto com os dados para enviar via POST
+    const data = {
+        totalDuration: totalDuration,
+        studyTime: studyTime,
+        breakTime: breakTime,
+        selectedOption: selectedOption
+    };
+
+    fetch('https://server-iot-chi.vercel.app/config/pomodoro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Configuração do alarme Pomodoro salva com sucesso!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erro ao salvar a configuração do alarme Pomodoro.');
+    });
+}
+</script>
+</body>
+</html>
+

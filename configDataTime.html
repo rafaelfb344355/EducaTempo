@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Data e Hora</title>
+   <link rel="stylesheet" href="style.css"> 
+    <!-- Link para o CSS do Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <img class="mb-4" src="./Design sem nome/2.png" alt="">
+    <form>
+        <div class="form-group">
+            <label for="date">Data</label>
+            <input type="date" class="form-control" id="date" name="date">
+        </div>
+        <div class="form-group">
+            <label for="time">Hora</label>
+            <input type="time" class="form-control" id="time" name="time">
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="configureDateTime()" >Salvar</button>
+    </form>
+</div>
+
+<!-- Scripts do Bootstrap e jQuery (opcionais) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+function configureDateTime() {
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+
+    console.log('Date:', date);
+    console.log('Time:', time);
+
+    fetch('https://server-iot-chi.vercel.app/config/datetime', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ date, time })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Data e hora configuradas com sucesso!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erro ao configurar data e hora.');
+    });
+}
+</script>
+</body>
+</html>
